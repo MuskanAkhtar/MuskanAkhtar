@@ -1,0 +1,74 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Product {
+public:
+    int productId;
+    string productName;
+    double price;
+
+    void displayProductDetails() const {
+        cout << "Product ID: " << productId << ", Name: " << productName << ", Price: $" << price << endl;
+    }
+};
+
+class ShoppingCart {
+private:
+    vector<Product> products; 
+public:
+    void addProduct(const Product& product) {
+        products.push_back(product); 
+    }
+
+    void displayAllProducts() const {
+        cout << "Products in the shopping cart:" << endl;
+        for (const Product& product : products) {
+            product.displayProductDetails();
+        }
+    }
+
+    double calculateTotalCost() const {
+        double totalCost = 0.0;
+        for (const Product& product : products) {
+            totalCost += product.price;
+        }
+        return totalCost;
+    }
+};
+
+class User {
+public:
+    int userId;
+    ShoppingCart* shoppingCart;
+
+    void displayUserDetails() const {
+        cout << "User ID: " << userId << endl;
+        if (shoppingCart) {
+            cout << "User has a shopping cart." << endl;
+        } else {
+            cout << "User does not have a shopping cart." << endl;
+        }
+    }
+};
+
+int main() {
+    Product product1{1, "Laptop", 999.99};
+    Product product2{2, "Headphones", 49.99};
+    Product product3{3, "Backpack", 39.99};
+    User user1{101, nullptr};
+    User user2{102, new ShoppingCart()};
+
+    user2.shoppingCart->addProduct(product1);
+    user2.shoppingCart->addProduct(product2);
+
+    user1.displayUserDetails();
+    user2.displayUserDetails();
+
+    user2.shoppingCart->displayAllProducts();
+    cout << "Total cost in user2's shopping cart: $" << user2.shoppingCart->calculateTotalCost() << endl;
+
+    delete user2.shoppingCart;
+
+    return 0;
+}
